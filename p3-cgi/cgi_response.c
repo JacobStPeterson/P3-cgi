@@ -62,12 +62,21 @@ cgi_response (char *uri, char *version, char *method, char *query,
         }
       // parent code
       close (pipefd[1]);
-      char *buffer = (char *)calloc (BUFFER_LENGTH, sizeof (char));
+      char *tmp = (char *)calloc (BUFFER_LENGTH, sizeof (char));
       wait (NULL);
+
+      // format response
+      char *buffer = (char *)calloc (BUFFER_LENGTH, sizeof (char));
+      strncat (buffer, "HTTP/1.0 200 OK\nContent-Type: text/html; charset=UTF-8\nContent-Length: ", BUFFER_LENGTH);
       
       // read message sent by the child process
-      if (read (pipefd[0], buffer, BUFFER_LENGTH) <= 0)
+      if (read (pipefd[0], tmp, BUFFER_LENGTH) <= 0)
         return NULL;
+      int content_len = strlen (tmp);
+      char content_len_str[6];
+      snprintf (content_len_str, 6, "%d\n\n", content_len);
+      strncat (buffer, content_len_str, BUFFER_LENGTH);
+      strncat (buffer, tmp, BUFFER_LENGTH);
       return buffer;
     }
   return strdup ("HTTP/1.0 404 Not Found" CRLF CRLF);
