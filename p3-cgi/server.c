@@ -62,8 +62,12 @@ serve_request (int connfd)
   // files, you will need to pipe/fork/dup2/exec the program. Also, note that
   // the query string will need to be passed using an environment variable
   // called "QUERY_STRING".
-  char *response = html_response (uri, version);
-  write (connfd, response, strlen (response));
+  if (strncmp (uri, "cgi-bin", 7) == 0)
+    {
+      char *response = cgi_response (uri, version, *method, query,
+              size, boundary, body);
+      write (connfd, response, strlen (response));
+    }
 
   shutdown (connfd, SHUT_RDWR);
   close (connfd);
