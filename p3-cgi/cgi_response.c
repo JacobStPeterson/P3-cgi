@@ -45,6 +45,31 @@ cgi_response (char *uri, char *version, char *method, char *query,
   //   "<h2>Hello world!</h2>\n"
   //   "</body>\n"
   //   "</html>\n"
+  if (uri != NULL)
+    {
+      int pipefd[2];
+      pipe (pipefd);
+      pid_t pid = fork ();
+
+      if (pid == 0)
+        {
+          //child code
+          close (pipefd[0]);
+          dup2 (pipefd[1], STDOUT_FILENO);
+          close (pipefd[1]);
+          char *const argv[] = {NULL};
+          execvp (uri, argv);
+        }
+      // parent code
+      close (pipefd[1]);
+      char *buffer = (char *)calloc (BUFFER_LENGTH, sizeof (char));
+      wait (NULL);
+      
+      // read message sent by the child process
+      if (read (pipefd[0], buffer, BUFFER_LENGTH) <= 0)
+        return NULL;
+      return buffer;
+    }
   return strdup ("HTTP/1.0 404 Not Found" CRLF CRLF);
 
   // TODO [FULL]: Set the environment variables needed for the CGI programs
