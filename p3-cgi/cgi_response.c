@@ -81,7 +81,7 @@ cgi_response (char *uri, char *version, char *method, char *query,
       strncat (buffer, content_len_str, BUFFER_LENGTH);
 
       // add "Connection: close" if uri points to shutdown
-      if (strncmp (uri, "cgi-bin/shutdown.cgi", 21) == 0)
+      if (strstr (uri, "cgi-bin/shutdown.cgi"))
         strncat (buffer, "\r\nConnection: close", BUFFER_LENGTH);
 
       strncat (buffer, "\r\n\r\n", BUFFER_LENGTH);
