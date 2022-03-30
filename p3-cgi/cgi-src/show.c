@@ -32,10 +32,11 @@ main ()
   char *firstWord = (char *) calloc (70,  sizeof (char));
   char *secondWord = (char *) calloc (70,  sizeof (char));
 
-  char *db = NULL;
-  char *record = NULL;
+  char *db = getenv ("db");
+  char *record = getenv ("record");
   char *hash = NULL;
-  char *query = NULL;
+  char *query = getenv ("QUERY_STRING");
+  
   // This is an HTML comment. It's useful for debugging to see if your
   // environment variables got through.
   printf ("  <!-- Environment variables:\n");
