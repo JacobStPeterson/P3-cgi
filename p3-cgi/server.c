@@ -80,8 +80,13 @@ serve_request (int connfd)
 
   // TODO [PART]: If the URI is for the shutdown.cgi file, kill the current
   // process with the SIGUSR1 signal.
-  if (uri != NULL)
+  // if (uri != NULL)
+  //  free (uri);
+  if (strncmp (uri, "/cgi-bin/shutdown.cgi", strlen (uri)) == 0)
+    raise (SIGUSR1);
+  if (uri != null)
     free (uri);
+
 
   return;
 }
