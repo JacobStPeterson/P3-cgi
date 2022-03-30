@@ -17,6 +17,19 @@ main ()
           "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/"
           "iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\" />\n");
   printf ("  </head>\n\n");
+  
+  // retrieve file
+  FILE *fp = fopen ("./data/data.txt", "r");
+
+  if (fp == NULL)
+    {
+      printf ("lmao\n");
+      return 0;
+    }
+
+  char *line = (char *) calloc (70, sizeof (char));
+  char *firstWord = (char *) calloc (70,  sizeof (char));
+  char *secondWord = (char *) calloc (70,  sizeof (char));
 
   char *db = NULL;
   char *record = NULL;
@@ -50,7 +63,36 @@ main ()
   //        </div>
   //      </div>
   //    </body>
+  printf ("  <body>\n");
+  printf ("    <div class=\"container\">\n");
+  printf ("      <br />\n");
+  printf ("      <h2 class=\"mb-0\">Database Records</h2>\n");
+  printf ("      <div class=\"row\">\n");
 
+  bool a = false;
+  while ((fgets (line, 70, fp) != NULL))
+    {
+      if (a)
+        printf ("        <div class=\"w-100\"></div>\n");
+
+      // takes the two words (sperated by a space) in the the file line
+      // and prints them
+      char *linecpy = strdup (line);
+      char *token = strtok (linecpy, " ");
+      firstWord = strdup(token);
+      token = strtok(NULL, " ");
+      secondWord = strdup(token);
+      
+      // remove the \n from the second word
+      secondWord[strcspn(secondWord, "\n")] = 0;
+      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
+      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
+      a = true;
+    }
+
+  printf ("      </div>\n");
+  printf ("    </div>\n");
+  printf ("  </body>\n");
   // TODO [MIN]: Once you have the basic structure working, extend this to
   // read in environment variables (db, record, hash, and QUERY_STRING).
   // From a logic standpoint, if QUERY_STRING is set, use that and split it
