@@ -72,10 +72,20 @@ cgi_response (char *uri, char *version, char *method, char *query,
       // read message sent by the child process
       if (read (pipefd[0], tmp, BUFFER_LENGTH) <= 0)
         return NULL;
+
+      // add content length to the buffer
       int content_len = strlen (tmp);
       char content_len_str[6];
-      snprintf (content_len_str, 6, "%d\n\n", content_len);
+      snprintf (content_len_str, 6, "%d", content_len);
       strncat (buffer, content_len_str, BUFFER_LENGTH);
+
+      // add "Connection: close" if uri points to shutdown
+      if (strncmp (uri, "cgi-bin/shutdown.cgi", 21) == 0)
+        strncat (buffer, "\nConnection: close", BUFFER_LENGTH);
+
+      strncat (buffer, "\n\n", BUFFER_LENGTH);
+      // add the html string retrieved from the child process
+      // to the buffer
       strncat (buffer, tmp, BUFFER_LENGTH);
       return buffer;
     }
