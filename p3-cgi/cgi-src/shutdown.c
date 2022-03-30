@@ -18,6 +18,13 @@ main (void)
   //    </body>
   //    </html>
   // Once this program finishes running, the server should shut itself down.
-
+  printf ("<html>\n");
+  printf ("<head>\n");
+  printf ("  <title>Success!</title>\n");
+  printf ("</head>\n");
+  printf ("<body>\n");
+  printf ("  <p>Server has stopped</p>\n");
+  printf ("</body>\n");
+  printf ("</html>\n");
   return 0;
 }
