@@ -67,7 +67,8 @@ cgi_response (char *uri, char *version, char *method, char *query,
 
       // format response
       char *buffer = (char *)calloc (BUFFER_LENGTH, sizeof (char));
-      strncat (buffer, "HTTP/1.0 200 OK\nContent-Type: text/html; charset=UTF-8\nContent-Length: ", BUFFER_LENGTH);
+      strncat (buffer, version, BUFFER_LENGTH);
+      strncat (buffer, " 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: ", BUFFER_LENGTH);
       
       // read message sent by the child process
       if (read (pipefd[0], tmp, BUFFER_LENGTH) <= 0)
@@ -81,9 +82,9 @@ cgi_response (char *uri, char *version, char *method, char *query,
 
       // add "Connection: close" if uri points to shutdown
       if (strncmp (uri, "cgi-bin/shutdown.cgi", 21) == 0)
-        strncat (buffer, "\nConnection: close", BUFFER_LENGTH);
+        strncat (buffer, "\r\nConnection: close", BUFFER_LENGTH);
 
-      strncat (buffer, "\n\n", BUFFER_LENGTH);
+      strncat (buffer, "\r\n\r\n", BUFFER_LENGTH);
       // add the html string retrieved from the child process
       // to the buffer
       strncat (buffer, tmp, BUFFER_LENGTH);
