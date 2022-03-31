@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+
 int
 main ()
 {
@@ -33,7 +34,7 @@ main ()
 
   char *db = getenv ("db");
   char *record = getenv ("record");
-  char *hash = NULL;
+  char *hash = getenv ("hash");
   char *query = getenv ("QUERY_STRING");
 
   // This is an HTML comment. It's useful for debugging to see if your
@@ -70,7 +71,26 @@ main ()
   printf ("      <h2 class=\"mb-0\">Database Records</h2>\n");
   printf ("      <div class=\"row\">\n");
 
-
+  if (query != NULL) {
+    char *query_cpy = strdup (query);
+    char *token = strtok (query_cpy, "&");
+    while (token != NULL) {
+      if (strstr (token, "db=")) 
+        {
+          db = &token[3];
+        }
+      else if (strstr (token, "record="))
+        {
+          record = &token[7];
+        }
+      else if (strstr (token, "hash="))
+        {
+          hash = &token[5];
+        }
+      token = strtok(NULL, "&");
+    }
+  }
+  // if db is active there is a different file that should be accested
   if (db != NULL)
     {
       char *buffer = (char *) calloc (40, sizeof(char));
@@ -88,24 +108,33 @@ main ()
     }
 
   bool a = false;
+  int i = 1;
+  int record_int = 0;
+  if (record != NULL)
+    record_int = strtol (record, NULL, 10);
+
   while ((fgets (line, 70, fp) != NULL))
     {
-      if (a)
-        printf ("        <div class=\"w-100\"></div>\n");
+      if (record == NULL || record_int == i)
+        {
+          if (a)
+            printf ("        <div class=\"w-100\"></div>\n");
 
-      // takes the two words (sperated by a space) in the the file line
-      // and prints them
-      char *linecpy = strdup (line);
-      char *token = strtok (linecpy, " ");
-      firstWord = strdup(token);
-      token = strtok(NULL, " ");
-      secondWord = strdup(token);
+          // takes the two words (sperated by a space) in the the file line
+          // and prints them
+          char *linecpy = strdup (line);
+          char *token = strtok (linecpy, " ");
+          firstWord = strdup(token);
+          token = strtok(NULL, " ");
+          secondWord = strdup(token);
       
-      // remove the \n from the second word
-      secondWord[strcspn(secondWord, "\n")] = 0;
-      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
-      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
-      a = true;
+          // remove the \n from the second word
+          secondWord[strcspn(secondWord, "\n")] = 0;
+          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
+          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
+          a = true;
+        }
+      i++;
     }
 
   printf ("      </div>\n");
