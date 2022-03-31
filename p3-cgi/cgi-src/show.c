@@ -18,13 +18,12 @@ main ()
           "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/"
           "iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\" />\n");
   printf ("  </head>\n\n");
-  
+
   // retrieve file
   FILE *fp = fopen ("./data/data.txt", "r");
 
   if (fp == NULL)
     {
-      printf ("lmao\n");
       return 0;
     }
 
@@ -36,7 +35,7 @@ main ()
   char *record = getenv ("record");
   char *hash = NULL;
   char *query = getenv ("QUERY_STRING");
-  
+
   // This is an HTML comment. It's useful for debugging to see if your
   // environment variables got through.
   printf ("  <!-- Environment variables:\n");
@@ -71,44 +70,42 @@ main ()
   printf ("      <h2 class=\"mb-0\">Database Records</h2>\n");
   printf ("      <div class=\"row\">\n");
 
+
   if (db != NULL)
     {
+      char *buffer = (char *) calloc (40, sizeof(char));
+      strncat (buffer, "./data/", 40);
+      strncat (buffer, db, 40);
+      fp = fopen (buffer, "r");
 
-    }
-  else if (record != NULL)
-    {
-
-    }
-  else if (hash != NULL)
-    {
-
-    }
-  else if (query != NULL)
-    {
-
-    }
-  else
-    {
-      bool a = false;
-      while ((fgets (line, 70, fp) != NULL))
+      if (fp == NULL)
         {
-          if (a)
-            printf ("        <div class=\"w-100\"></div>\n");
-
-          // takes the two words (sperated by a space) in the the file line
-          // and prints them
-          char *linecpy = strdup (line);
-          char *token = strtok (linecpy, " ");
-          firstWord = strdup(token);
-          token = strtok(NULL, " ");
-          secondWord = strdup(token);
-
-          // remove the \n from the second word
-          secondWord[strcspn(secondWord, "\n")] = 0;
-          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
-          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
-          a = true;
+          printf ("lmao retard.");
+          free (buffer);
+          return 0;
         }
+      free (buffer);
+    }
+
+  bool a = false;
+  while ((fgets (line, 70, fp) != NULL))
+    {
+      if (a)
+        printf ("        <div class=\"w-100\"></div>\n");
+
+      // takes the two words (sperated by a space) in the the file line
+      // and prints them
+      char *linecpy = strdup (line);
+      char *token = strtok (linecpy, " ");
+      firstWord = strdup(token);
+      token = strtok(NULL, " ");
+      secondWord = strdup(token);
+      
+      // remove the \n from the second word
+      secondWord[strcspn(secondWord, "\n")] = 0;
+      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
+      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
+      a = true;
     }
 
   printf ("      </div>\n");
