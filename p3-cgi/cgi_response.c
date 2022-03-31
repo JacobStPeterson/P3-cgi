@@ -45,7 +45,7 @@ cgi_response (char *uri, char *version, char *method, char *query,
   //   "<h2>Hello world!</h2>\n"
   //   "</body>\n"
   //   "</html>\n"
-  if (uri != NULL)
+  if (uri != NULL && strncmp (method, "GET", strlen(method)) == 0)
     {
       int pipefd[2];
       pipe (pipefd);
@@ -90,8 +90,6 @@ cgi_response (char *uri, char *version, char *method, char *query,
       strncat (buffer, tmp, BUFFER_LENGTH);
       return buffer;
     }
-  return strdup ("HTTP/1.0 404 Not Found" CRLF CRLF);
-
   // TODO [FULL]: Set the environment variables needed for the CGI programs
   // located in cgi-bin. To do this, you will need to use either execve()
   // or execle() when running the CGI program, using an array of string
@@ -103,5 +101,7 @@ cgi_response (char *uri, char *version, char *method, char *query,
   // If the request is a GET request, you should only set the QUERY_STRING
   // variable to be the query parameter. For POST requests, you will need
   // to look through the body of the HTTP request, splitting based on the
-  // boundary values (see the project description for an example).
+  // boundary values (see the project description for an example)
+
+  return strdup ("HTTP/1.0 404 Not Found" CRLF CRLF);
 }
