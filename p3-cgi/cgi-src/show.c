@@ -131,7 +131,12 @@ main ()
           // remove the \n from the second word
           secondWord[strcspn(secondWord, "\n")] = 0;
           printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
-          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
+          printf ("        <div class=\"col py-md-2 border bg-light\">%s", firstWord);
+
+          // if hash given and hash inside this recod dont match print this
+          if (hash != NULL && strncmp (hash, firstWord, strlen(hash)) != 0) 
+            printf (" <span class=\"badge badge-danger\">MISMATCH</span>");
+          printf ("</div>\n");
           a = true;
         }
       i++;
