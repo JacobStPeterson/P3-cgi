@@ -71,25 +71,44 @@ main ()
   printf ("      <h2 class=\"mb-0\">Database Records</h2>\n");
   printf ("      <div class=\"row\">\n");
 
-  bool a = false;
-  while ((fgets (line, 70, fp) != NULL))
+  if (db != NULL)
     {
-      if (a)
-        printf ("        <div class=\"w-100\"></div>\n");
 
-      // takes the two words (sperated by a space) in the the file line
-      // and prints them
-      char *linecpy = strdup (line);
-      char *token = strtok (linecpy, " ");
-      firstWord = strdup(token);
-      token = strtok(NULL, " ");
-      secondWord = strdup(token);
-      
-      // remove the \n from the second word
-      secondWord[strcspn(secondWord, "\n")] = 0;
-      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
-      printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
-      a = true;
+    }
+  else if (record != NULL)
+    {
+
+    }
+  else if (hash != NULL)
+    {
+
+    }
+  else if (query != NULL)
+    {
+
+    }
+  else
+    {
+      bool a = false;
+      while ((fgets (line, 70, fp) != NULL))
+        {
+          if (a)
+            printf ("        <div class=\"w-100\"></div>\n");
+
+          // takes the two words (sperated by a space) in the the file line
+          // and prints them
+          char *linecpy = strdup (line);
+          char *token = strtok (linecpy, " ");
+          firstWord = strdup(token);
+          token = strtok(NULL, " ");
+          secondWord = strdup(token);
+
+          // remove the \n from the second word
+          secondWord[strcspn(secondWord, "\n")] = 0;
+          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", secondWord);
+          printf ("        <div class=\"col py-md-2 border bg-light\">%s</div>\n", firstWord);
+          a = true;
+        }
     }
 
   printf ("      </div>\n");
