@@ -64,7 +64,7 @@ serve_request (int connfd)
   // called "QUERY_STRING".
   if (strncmp (uri, "cgi-bin", 7) == 0)
     {
-      char *response = cgi_response (uri, version, *method, query,
+      char *response = cgi_response (uri, version, method, query,
               size, boundary, body);
       write (connfd, response, strlen (response));
     }
